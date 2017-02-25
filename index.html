@@ -1,0 +1,75 @@
+<html>
+<head>
+<script type="text/javascript">
+var thisLeft = 0;
+var thisTop = 0;
+var moveID = 0;
+var state = 1;
+
+//Set the width and height of the browser window automatically
+var w = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) - 150;
+var h = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) - 150;
+
+//Calculate the window ratio to accurately return text back to start position
+var windowRatio = w / h;
+
+function moveText(){
+	
+	var thisText = document.getElementById('text');
+	
+	
+	//Set the instance for each state
+	if (state == 1){
+		thisLeft += 100;
+	}else if (state == 2){
+		thisTop += 100;
+	}else if (state == 3){
+		thisTop -= 100;
+		thisLeft -= 100 * windowRatio;
+	}
+	
+	//Run each state until it meets the specified condition
+	if (state == 1 && (thisLeft >= w)){	
+		state = 2
+		document.getElementById('text').innerHTML="moving down";
+		thisText.style.color = "blue";
+		thisText.style.fontSize = "x-large";
+	} else if (state == 2 && (thisTop >= h)){
+		state = 3;
+		document.getElementById('text').innerHTML="moving top left";
+		thisText.style.color = "red";
+		thisText.style.fontSize = "xx-large";
+	} else if (state == 3 && (thisLeft <= 0)){
+		document.getElementById('text').innerHTML="moving right";
+		thisText.style.color = "black";
+		thisText.style.fontSize = "medium";
+		thisLeft = 0;
+		thisTop = 0;
+		state = 0;
+		
+		//Stops the timer
+		clearInterval(moveID);
+	}
+	
+	//Sets the placement of the text on the screen
+	thisText.style.left=thisLeft +"px";
+	thisText.style.top=thisTop +"px";
+	
+	
+	
+}
+
+function doMove(){
+ //Moves the text every 500 milliseconds
+ moveID = setInterval(moveText, 500);
+
+}
+
+</script>
+</head>
+<body  onload= "doMove()" >
+<div id="text" style="position:absolute; color:black; font-size:medium;">
+<p>moving right</p>
+</div>
+</body>
+</html>
